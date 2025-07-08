@@ -257,7 +257,9 @@ Your favorite books (in no particular order)
 Please
 <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
 to get dummy text<br/>
-
+Visit my
+<a href="https://github.com/ninaghar/kambaz-react-web-app" id="wd-github">GitHub repo</a>
+to see the code<br/>
     </div>
 
 );}
