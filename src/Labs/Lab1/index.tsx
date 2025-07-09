@@ -203,6 +203,12 @@ Your favorite books (in no particular order)
         id="wd-all-good">
   Hello World!
 </button>
+
+<br /><br />
+
+<label htmlFor="file-upload">Upload File:</label>
+<input type="file" id="file-upload" name="file-upload" />
+
 <h5 id="wd-radio-buttons">Radio buttons</h5>
 
 <label>Favorite movie genre:</label><br />
