@@ -12,7 +12,7 @@ export default function Assignments() {
   return (
     <div id="wd-assignments">
       <AssignmentControls />
-      <br /><br /><br /><br />
+      <br /><br />
       <ListGroup className="rounded-0" id="wd-assignments">
         <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
             <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">

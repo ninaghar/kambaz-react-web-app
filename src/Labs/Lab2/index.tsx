@@ -21,6 +21,7 @@ import BootstrapTables from "./BootstrapTables";
 import BootstrapLists from "./BootstrapLists";
 import BootstrapForms from "./BootstrapForms";
 import BootstrapNavigation from "./BootstrapNavigation";
+import GridLayout from "./GridLayout";
 import { Container } from "react-bootstrap";
 import ScreenSizeLabel from "./ScreenSizeLabel";
 export default function Lab2() {
@@ -87,6 +88,7 @@ This heading has same style as paragraph above
 <Dimensions />
 <Positions />
 <Float />
+<GridLayout />
 <Flex />
 <ReactIcons />
 <BootstrapGrids />
