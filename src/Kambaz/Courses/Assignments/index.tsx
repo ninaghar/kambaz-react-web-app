@@ -1,8 +1,233 @@
+import AssignmentControls from "./AssignmentControls";
+import { ListGroup, Button } from "react-bootstrap";
+import { BsGripVertical } from "react-icons/bs";
+import { FaPlus } from "react-icons/fa6";
+import LessonControlButtons from "../Modules/LessonControlButtons";
+import { MdOutlineAssignment } from "react-icons/md";
+import { IoEllipsisVertical } from "react-icons/io5";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+import { IoIosArrowDown } from "react-icons/io";
+
 export default function Assignments() {
   return (
-    
     <div id="wd-assignments">
-       <div>
+      <AssignmentControls />
+      <br /><br /><br /><br />
+      <ListGroup className="rounded-0" id="wd-assignments">
+        <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+            <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+                <div>
+                <BsGripVertical className="me-2 fs-3" />
+                <IoIosArrowDown className="me-2 fs-4" />
+                ASSIGNMENTS
+                </div>
+                <AssignmentControlButtons />
+            </div>
+        {/* <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+            <div>
+              <BsGripVertical className="me-2 fs-3" />
+              ASSIGNMENTS 40% of Total
+            </div>
+            <Button
+              variant="light"
+              className="border-0"
+              aria-label="Add Assignment Group"
+            >
+              <FaPlus />
+              
+            </Button>
+            
+          </div> */}
+
+          <ListGroup className="wd-lessons rounded-0">
+            {/* Assignment 1 */}
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="d-flex">
+                  <div className="me-2">
+                    <BsGripVertical className="fs-3" />
+                    <MdOutlineAssignment className="fs-3 text-success" />
+                  </div>
+                  <div>
+                    <a
+                      href="#/Kambaz/Courses/1234/Assignments/123"
+                      className="wd-assignment-link text-decoration-none text-dark fw-bold"
+                    >
+                      A1
+                    </a>
+                    <div className="small text-muted">
+                      <span className="text-danger">Multiple Modules</span> |{" "}
+                      <strong>Not available</strong> until May 6 at 12:00am
+                      <br />
+                      <strong>Due</strong> May 13 at 11:59pm | 100 pts
+                    </div>
+                  </div>
+                </div>
+                <LessonControlButtons />
+              </div>
+            </ListGroup.Item>
+
+            {/* Assignment 2 */}
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="d-flex">
+                  <div className="me-2">
+                    <BsGripVertical className="fs-3" />
+                    <MdOutlineAssignment className="fs-3 text-success" />
+                  </div>
+                  <div>
+                    <a
+                      href="#/Kambaz/Courses/1234/Assignments/124"
+                      className="wd-assignment-link text-decoration-none text-dark fw-bold"
+                    >
+                      A2
+                    </a>
+                    <div className="small text-muted">
+                      <span className="text-danger">Multiple Modules</span> |{" "}
+                      <strong>Not available</strong> until May 13 at 12:00am 
+                      <br />
+                       <strong>Due</strong> May 20 at 11:59pm | 100 pts
+                    </div>
+                  </div>
+                </div>
+                <LessonControlButtons />
+              </div>
+            </ListGroup.Item>
+
+            {/* Assignment 3 */}
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="d-flex">
+                  <div className="me-2">
+                    <BsGripVertical className="fs-3" />
+                    <MdOutlineAssignment className="fs-3 text-success" />
+                  </div>
+                  <div>
+                    <a
+                      href="#/Kambaz/Courses/1234/Assignments/125"
+                      className="wd-assignment-link text-decoration-none text-dark fw-bold"
+                    >
+                      A3
+                    </a>
+                    <div className="small text-muted">
+                      <span className="text-danger">Multiple Modules</span> |{" "}
+                      <strong>Not available</strong> until May 20 at 12:00am 
+                      <br />
+                       <strong>Due</strong> May 27 at 11:59pm | 100 pts
+                    </div>
+                  </div>
+                </div>
+                <LessonControlButtons />
+              </div>
+            </ListGroup.Item>
+          </ListGroup>
+        </ListGroup.Item>
+      </ListGroup>
+    </div>
+  );
+}
+
+// import AssignmentControls from "./AssignmentControls";
+// import { ListGroup, Button } from "react-bootstrap";
+// import { BsGripVertical } from "react-icons/bs";
+// import { FaPlus } from "react-icons/fa6";
+// import LessonControlButtons from "../Modules/LessonControlButtons";
+// import { MdOutlineAssignment } from "react-icons/md";
+// export default function Assignments() {
+//   return (
+    
+//     <div id="wd-assignments">
+//         <AssignmentControls /><br /><br /><br /><br />
+//         <ListGroup className="rounded-0" id="wd-assignments">
+//       {/* Assignment Group Header */}
+//       <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+//         <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+//           <div>
+//             <BsGripVertical className="me-2 fs-3" />
+//             ASSIGNMENTS 40% of Total
+//           </div>
+//           <Button
+//             variant="light"
+//             className="border-0"
+//             aria-label="Add Assignment Group"
+//           >
+//             <FaPlus />
+//           </Button>
+//         </div>
+
+//         {/* Assignment List */}
+//         <ListGroup className="wd-lessons rounded-0">
+          
+//           <ListGroup.Item className="wd-lesson p-3 ps-1">
+//             <div className="d-flex justify-content-between align-items-start">
+//               <div>
+//                 <BsGripVertical className="me-2 fs-3" />
+//                 <MdOutlineAssignment className="me-2 fs-3 text-success" />
+//                 <a
+//                   href="#/Kambaz/Courses/1234/Assignments/123"
+//                   className="wd-assignment-link text-decoration-none text-dark fw-bold"
+//                 >
+//                   A1 
+//                 </a>
+//                 <div className="small text-muted">
+//                   Multiple Modules | <strong>Not available</strong> until May 6 at 12:00am | <strong>Due</strong> May 13 at 11:59pm | 100 pts
+//                 </div>
+//               </div>
+//               <LessonControlButtons />
+//             </div>
+//           </ListGroup.Item>
+
+//           {/* Assignment 2 */}
+//           <ListGroup.Item className="wd-lesson p-3 ps-1">
+//             <div className="d-flex justify-content-between align-items-start">
+//               <div>
+//                 <BsGripVertical className="me-2 fs-3" />
+//                 <MdOutlineAssignment className="me-2 fs-3 text-success" />
+//                 <a
+//                   href="#/Kambaz/Courses/1234/Assignments/124"
+//                   className="wd-assignment-link text-decoration-none text-dark fw-bold"
+//                 >
+//                   A2 
+//                 </a>
+//                 <div className="small text-muted">
+//                   Multiple Modules | <strong>Not available</strong> until May 13 at 12:00am | <strong>Due</strong> May 20 at 11:59pm | 100 pts
+//                 </div>
+//               </div>
+//               <LessonControlButtons />
+//             </div>
+//           </ListGroup.Item>
+
+//           {/* Assignment 3 */}
+//           <ListGroup.Item className="wd-lesson p-3 ps-1">
+//             <div className="d-flex justify-content-between align-items-start">
+//               <div>
+//                 <BsGripVertical className="me-2 fs-3" />
+//                 <MdOutlineAssignment className="me-2 fs-3 text-success" />
+//                 <a
+//                   href="#/Kambaz/Courses/1234/Assignments/125"
+//                   className="wd-assignment-link text-decoration-none text-dark fw-bold"
+//                 >
+//                   A3 
+//                 </a>
+//                 <div className="small text-muted">
+//                   Multiple Modules | <strong>Not available</strong> until May 20 at 12:00am | <strong>Due</strong> May 27 at 11:59pm | 100 pts
+//                 </div>
+//               </div>
+//               <LessonControlButtons />
+//             </div>
+//           </ListGroup.Item>
+//         </ListGroup>
+//       </ListGroup.Item>
+//     </ListGroup>
+       
+
+//     </div>
+//   );
+// }
+
+
+{/* <div>
       <input
         placeholder="Search for Assignments"
         id="wd-search-assignment"
@@ -10,9 +235,11 @@ export default function Assignments() {
      
         <button id="wd-add-assignment-group">+ Group</button>
         <button id="wd-add-assignment">+ Assignment</button>
-      </div>
+      </div> */}
 
-      <h3 id="wd-assignments-title">
+
+
+      {/* <h3 id="wd-assignments-title">
         ASSIGNMENTS 40% of Total{" "}
         <button aria-label="Add Assignment Group">+</button>
       </h3>
@@ -39,7 +266,7 @@ export default function Assignments() {
           <div>
                 Multiple Modules | <strong>Not available</strong> until May 13 at 12:00am | <strong>Due</strong> May 20 at 11:59pm | 100 pts
             </div>
-          {/* You can add more assignments here */}
+          
         </li>
          <li className="wd-assignment-list-item">
             <a
@@ -51,13 +278,9 @@ export default function Assignments() {
           <div>
                 Multiple Modules | <strong>Not available</strong> until May 20 at 12:00am | <strong>Due</strong> May 27 at 11:59pm | 100 pts
             </div>
-          {/* You can add more assignments here */}
+          
         </li>
-      </ul>
-    </div>
-  );
-}
-
+      </ul> */}
 
 // export default function Assignments() {
 //   return (
