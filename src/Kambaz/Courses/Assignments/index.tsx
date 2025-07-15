@@ -1,10 +1,10 @@
 import AssignmentControls from "./AssignmentControls";
-import { ListGroup, Button } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa6";
+
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { MdOutlineAssignment } from "react-icons/md";
-import { IoEllipsisVertical } from "react-icons/io5";
+
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { IoIosArrowDown } from "react-icons/io";
 
