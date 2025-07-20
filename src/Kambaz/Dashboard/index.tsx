@@ -1,57 +1,103 @@
-import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import courseData from "../Database/courses.json";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import type { ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 export default function Dashboard() {
-  const courses = [
-    { id: "1234", title: "CS1234 React JS", image: "/images/reactjs.jpg", desc: "Full Stack Software Development" },
-    { id: "2345", title: "CS2345 Node JS", image: "/images/nodejs.jpg", desc: "Server-side Web Programming" },
-    { id: "3456", title: "CS3456 Python", image: "/images/python.jpg", desc: "Intro to Data Analysis" },
-    { id: "4567", title: "CS4567 Machine Learning", image: "/images/machine-learning.jpg", desc: "AI & Predictive Modeling" },
-    { id: "5678", title: "CS5678 Databases", image: "/images/database.jpg", desc: "Relational DBs & SQL" },
-    { id: "6789", title: "CS6789 DevOps", image: "/images/devops.jpg", desc: "CI/CD and Cloud Practices" },
-    { id: "7890", title: "CS7890 Cybersecurity", image: "/images/security.jpg", desc: "Ethical Hacking & Defense" },
-  ];
-
+  const courses = courseData;
   return (
-    <div id="wd-dashboard" className="p-4">
-      <h1 id="wd-dashboard-title">Dashboard</h1>
-      <hr />
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
-      <hr />
-
-      <div
-        id="wd-dashboard-courses"
-        className="d-flex flex-wrap justify-content-start gap-4"
-        style={{ rowGap: "40px" }}
-      >
-        {courses.map((course) => (
-          <div key={course.id} style={{ width: "270px" }}>
-            <Card className="shadow-sm h-100">
-              <Link
-                to={`/Kambaz/Courses/1234/Home`}
-                className="text-decoration-none text-dark"
-              >
-                <Card.Img variant="top" src={course.image} height={160} />
-                <Card.Body>
-                  <Card.Title className="text-nowrap overflow-hidden">
-                    {course.title}
-                  </Card.Title>
-                  <Card.Text
-                    className="overflow-hidden"
-                    style={{ height: "100px" }}
-                  >
-                    {course.desc}
-                  </Card.Text>
-                  <Button variant="primary">Go</Button>
-                </Card.Body>
-              </Link>
-            </Card>
-          </div>
-        ))}
+    <div id="wd-dashboard">
+      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+      <div id="wd-dashboard-courses">
+        <Row xs={1} md={5} className="g-4">
+          {courses.map((course: { _id: any; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+            <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+              <Card>
+                <Link to={`/Kambaz/Courses/${course._id}/Home`}
+                      className="wd-dashboard-course-link text-decoration-none text-dark" >
+                  <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} />
+                  <Card.Body className="card-body">
+                    <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                      {course.name} </Card.Title>
+                    <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                      {course.description} </Card.Text>
+                    <Button variant="primary"> Go </Button>
+                  </Card.Body>
+                </Link>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </div>
-    </div>
-  );
-}
+    </div>);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Card, Button } from "react-bootstrap";
+// import { Link } from "react-router-dom";
+
+// export default function Dashboard() {
+//   const courses = [
+//     { id: "1234", title: "CS1234 React JS", image: "/images/reactjs.jpg", desc: "Full Stack Software Development" },
+//     { id: "2345", title: "CS2345 Node JS", image: "/images/nodejs.jpg", desc: "Server-side Web Programming" },
+//     { id: "3456", title: "CS3456 Python", image: "/images/python.jpg", desc: "Intro to Data Analysis" },
+//     { id: "4567", title: "CS4567 Machine Learning", image: "/images/machine-learning.jpg", desc: "AI & Predictive Modeling" },
+//     { id: "5678", title: "CS5678 Databases", image: "/images/database.jpg", desc: "Relational DBs & SQL" },
+//     { id: "6789", title: "CS6789 DevOps", image: "/images/devops.jpg", desc: "CI/CD and Cloud Practices" },
+//     { id: "7890", title: "CS7890 Cybersecurity", image: "/images/security.jpg", desc: "Ethical Hacking & Defense" },
+//   ];
+
+//   return (
+//     <div id="wd-dashboard" className="p-4">
+//       <h1 id="wd-dashboard-title">Dashboard</h1>
+//       <hr />
+//       <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
+//       <hr />
+
+//       <div
+//         id="wd-dashboard-courses"
+//         className="d-flex flex-wrap justify-content-start gap-4"
+//         style={{ rowGap: "40px" }}
+//       >
+//         {courses.map((course) => (
+//           <div key={course.id} style={{ width: "270px" }}>
+//             <Card className="shadow-sm h-100">
+//               <Link
+//                 to={`/Kambaz/Courses/1234/Home`}
+//                 className="text-decoration-none text-dark"
+//               >
+//                 <Card.Img variant="top" src={course.image} height={160} />
+//                 <Card.Body>
+//                   <Card.Title className="text-nowrap overflow-hidden">
+//                     {course.title}
+//                   </Card.Title>
+//                   <Card.Text
+//                     className="overflow-hidden"
+//                     style={{ height: "100px" }}
+//                   >
+//                     {course.desc}
+//                   </Card.Text>
+//                   <Button variant="primary">Go</Button>
+//                 </Card.Body>
+//               </Link>
+//             </Card>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
 
 // import { Card, Row, Col, Button } from "react-bootstrap";
 // import { Link } from "react-router-dom";

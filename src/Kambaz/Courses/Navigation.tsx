@@ -1,67 +1,107 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function CourseNavigation() {
   const { pathname } = useLocation();
+  const { courseId } = useParams(); // assumes route path is /Kambaz/Courses/:cid/:screen
 
-  const getClass = (path: string) =>
+  const links = [
+    "Home",
+    "Modules",
+    "Piazza",
+    "Zoom",
+    "Assignments",
+    "Quizzes",
+    "Grades",
+    "People",
+  ];
+
+  const getClass = (link: string) =>
     `list-group-item border-0 ${
-      pathname.includes(path) ? "active" : "text-danger"
+      pathname.includes(link) ? "active" : "text-danger"
     }`;
 
   return (
     <div id="wd-courses-navigation" className="list-group wd fs-5 rounded-0">
-      <Link
-        to="/Kambaz/Courses/1234/Home"
-        id="wd-course-home-link"
-        className={getClass("/Home")}
-      >
-        Home
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Modules"
-        id="wd-course-modules-link"
-        className={getClass("/Modules")}
-      >
-        Modules
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Piazza"
-        id="wd-course-piazza-link"
-        className={getClass("/Piazza")}
-      >
-        Piazza
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Zoom"
-        id="wd-course-zoom-link"
-        className={getClass("/Zoom")}
-      >
-        Zoom
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Assignments"
-        id="wd-course-assignments-link"
-        className={getClass("/Assignments")}
-      >
-        Assignments
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Quizzes"
-        id="wd-course-quizzes-link"
-        className={getClass("/Quizzes")}
-      >
-        Quizzes
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/People"
-        id="wd-course-people-link"
-        className={getClass("/People")}
-      >
-        People
-      </Link>
+      {links.map((link) => (
+        <Link
+          key={link}
+          to={`/Kambaz/Courses/${courseId}/${link}`}
+          className={getClass(link)}
+          id={`wd-course-${link.toLowerCase()}-link`}
+        >
+          {link}
+        </Link>
+      ))}
     </div>
   );
 }
+
+
+
+// import { Link, useLocation } from "react-router-dom";
+
+// export default function CourseNavigation() {
+//   const { pathname } = useLocation();
+
+//   const getClass = (path: string) =>
+//     `list-group-item border-0 ${
+//       pathname.includes(path) ? "active" : "text-danger"
+//     }`;
+
+//   return (
+//     <div id="wd-courses-navigation" className="list-group wd fs-5 rounded-0">
+//       <Link
+//         to="/Kambaz/Courses/1234/Home"
+//         id="wd-course-home-link"
+//         className={getClass("/Home")}
+//       >
+//         Home
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/Modules"
+//         id="wd-course-modules-link"
+//         className={getClass("/Modules")}
+//       >
+//         Modules
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/Piazza"
+//         id="wd-course-piazza-link"
+//         className={getClass("/Piazza")}
+//       >
+//         Piazza
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/Zoom"
+//         id="wd-course-zoom-link"
+//         className={getClass("/Zoom")}
+//       >
+//         Zoom
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/Assignments"
+//         id="wd-course-assignments-link"
+//         className={getClass("/Assignments")}
+//       >
+//         Assignments
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/Quizzes"
+//         id="wd-course-quizzes-link"
+//         className={getClass("/Quizzes")}
+//       >
+//         Quizzes
+//       </Link>
+//       <Link
+//         to="/Kambaz/Courses/1234/People"
+//         id="wd-course-people-link"
+//         className={getClass("/People")}
+//       >
+//         People
+//       </Link>
+//     </div>
+//   );
+// }
 
 // import { Link, useLocation } from "react-router-dom";
 // export default function CourseNavigation() {

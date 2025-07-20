@@ -6,7 +6,19 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 
 export default function KambazNavigation() {
-  const location = useLocation();
+const { pathname } = useLocation();
+  const links = [
+    { label: "Dashboard", path: "/Kambaz/Dashboard", icon: AiOutlineDashboard },
+    { label: "Courses",   path: "/Kambaz/Dashboard", icon: LiaBookSolid },
+    { label: "Calendar",  path: "/Kambaz/Calendar",  icon: IoCalendarOutline },
+    { label: "Inbox",     path: "/Kambaz/Inbox",     icon: FaInbox },
+    { label: "Labs",      path: "/Labs",             icon: LiaCogSolid },
+  ];
+
+
+
+
+  // const location = useLocation();
 
   const isAccount = location.pathname.startsWith("/Kambaz/Account");
   const isDashboard = location.pathname.startsWith("/Kambaz/Dashboard");
@@ -34,14 +46,24 @@ export default function KambazNavigation() {
       <ListGroup.Item
         to="/Kambaz/Account"
         as={Link}
-        className={`text-center border-0 ${isAccount ? "bg-white text-danger" : "bg-black text-white"}`}
+        className={`text-center border-0 bg-black
+            ${pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"}`}
       >
-        <FaRegCircleUser className="fs-1 text-white" />
+        <FaRegCircleUser className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
         <br />
         Account
       </ListGroup.Item>
 
-      <ListGroup.Item
+      {links.map((link) => (
+        <ListGroup.Item key={link.path} as={Link} to={link.path} className={`bg-black text-center border-0
+              ${pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"}`}>
+          {link.icon({ className: "fs-1 text-danger"})}
+          <br />
+          {link.label}
+        </ListGroup.Item>
+      ))}
+
+      {/* <ListGroup.Item
         to="/Kambaz/Dashboard"
         as={Link}
         className={`text-center border-0 ${isDashboard ? "bg-white text-danger" : "bg-black text-white"}`}
@@ -89,7 +111,7 @@ export default function KambazNavigation() {
         <LiaCogSolid className="fs-1 text-danger" />
         <br />
         Labs
-      </ListGroup.Item>
+      </ListGroup.Item> */}
     </ListGroup>
   );
 }
