@@ -32,7 +32,7 @@ export default function TOC() {
        <Nav.Link to="/Kambaz" as={Link} id="wd-a3">Kambaz</Nav.Link>
      </Nav.Item>
      <Nav.Item>
-       <Nav.Link href="https://github.com/ninaghar/kambaz-react-web-app">My GitHub</Nav.Link>
+       <Nav.Link href="https://github.com/ninaghar/kambaz-react-web-app" target="_blank">My GitHub</Nav.Link>
      </Nav.Item>
    </Nav>
   );

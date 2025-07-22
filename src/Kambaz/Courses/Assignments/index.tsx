@@ -51,7 +51,7 @@ export default function Assignments() {
                       </a>
                       <div className="small text-muted">
                         <span className="text-danger">Multiple Modules</span> |{" "}
-                        <strong>{assignment.available}</strong>
+                        <strong>{assignment.available}</strong> |
                         <br />
                         <strong>Due</strong> {assignment.due} | {assignment.points} pts
                       </div>
