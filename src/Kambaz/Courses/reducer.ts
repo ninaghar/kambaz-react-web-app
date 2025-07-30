@@ -17,6 +17,7 @@ const coursesSlice = createSlice({
   // declare reducer functions
   reducers: {
     addCourse: (state, { payload: course }) => {
+        console.log("Reducer addCourse called with:", course);
       // new course is in action.payload
       const newCourse: any = {
         _id: uuidv4(),

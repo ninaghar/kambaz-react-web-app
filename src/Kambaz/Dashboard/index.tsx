@@ -38,7 +38,11 @@ export default function Dashboard() {
 
   // Event handlers using Redux actions
   const addNewCourse = () => {
+    console.log("addNewCourse called");
+  console.log("Current course:", course);
+  console.log("About to dispatch addCourse");
     dispatch(addCourse(course));
+    console.log("Dispatched addCourse");
     // Reset the form
     setCourse({
       _id: "0", 
@@ -49,6 +53,7 @@ export default function Dashboard() {
       image: "/images/reactjs.jpg", 
       description: "New Description"
     });
+     console.log("Reset form");
   };
 
   const deleteCourseHandler = (courseId: string) => {
@@ -99,7 +104,7 @@ export default function Dashboard() {
           onClick={() => setShowAllCourses(!showAllCourses)}
           id="wd-enrollments-btn"
         >
-          {showAllCourses ? "My Courses" : "All Courses"}
+          {showAllCourses ? "Enrolled Courses" : "Enrollments"}
         </button>
       </div>
       <hr />
@@ -110,7 +115,13 @@ export default function Dashboard() {
           <h5>New Course
             <button className="btn btn-primary float-end"
                     id="wd-add-new-course-click"
-                    onClick={addNewCourse}> Add </button>
+                    // onClick={addNewCourse}
+                    onClick={(e) => {
+                    e.preventDefault();
+                    console.log("Add button clicked");
+                    addNewCourse();
+                  }}
+                    > Add </button>
             <button className="btn btn-warning float-end me-2"
                     onClick={updateCourseHandler} id="wd-update-course-click">
             Update
