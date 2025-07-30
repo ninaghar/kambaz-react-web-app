@@ -29,7 +29,7 @@ export default function Assignments() {
   console.log("Assignments from Redux:", assignments); 
 
   // Filter assignments for current course
-  const courseAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
+  // const courseAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
 
   const state = useSelector((state: any) => state);
   console.log("Full Redux state:", state);
@@ -44,10 +44,10 @@ export default function Assignments() {
     dispatch(deleteAssignment(assignmentId));
   };
 
-  const handleEditAssignment = (assignmentId: string) => {
-    // Navigate to AssignmentEditor for editing existing assignment
-    navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignmentId}/Editor`);
-  };
+  // const handleEditAssignment = (assignmentId: string) => {
+  //   // Navigate to AssignmentEditor for editing existing assignment
+  //   navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignmentId}/Editor`);
+  // };
 
   return (
     <div id="wd-assignments">

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+// import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
-import { addCourse, deleteCourse, updateCourse, editCourse } from "../Courses/reducer";
+import { addCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { enrollUser, unenrollUser } from "../Enrollments/reducer";
 
-import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
-import type { ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import {  Card, Col, FormControl, Row } from "react-bootstrap";
+// import type { ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
