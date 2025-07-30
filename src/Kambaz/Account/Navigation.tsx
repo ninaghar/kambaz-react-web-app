@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 export default function AccountNavigation() {
   const { pathname } = useLocation();
-
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
   const getClass = (path: string) =>
     `list-group-item border-0 ${
       pathname.includes(path) ? "active" : "text-danger"

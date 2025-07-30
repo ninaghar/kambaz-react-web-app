@@ -1,8 +1,14 @@
 import { Button, Form } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
+import { useState } from "react";
 
-export default function AssignmentControls() {
+export default function AssignmentControls({ 
+  handleAddAssignment 
+}: {
+  handleAddAssignment: () => void;
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <div className="d-flex justify-content-between align-items-center mb-3" id="wd-assignment-controls">
       {/* Search input styled like Bootstrap */}
@@ -23,6 +29,8 @@ export default function AssignmentControls() {
         placeholder="Search..."
         id="wd-search-assignment"
         className="ps-5"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       </div>
       {/* <InputGroup className="mb-3" style={{ maxWidth: "300px" }}>
@@ -52,6 +60,7 @@ export default function AssignmentControls() {
           variant="danger"
           id="wd-add-assignment"
           className="text-nowrap"
+          onClick={handleAddAssignment}
         >
           <FaPlus className="me-2" />
           Assignment

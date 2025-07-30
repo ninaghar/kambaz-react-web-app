@@ -9,10 +9,18 @@ import { courses } from "../Database";
 import AssignmentEditor from "./Assignments/Editor";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa6";
-export default function Courses() {
+import { useSelector } from "react-redux";
+export default function Courses(
+  // { courses }: { courses: any[]; }
+) {
     const { courseId } = useParams(); 
     // const { cid } = useParams();
-  const course = courses.find((course) => course._id === courseId);
+      // Get courses from Redux store instead of props
+  const { courses } = useSelector((state: any) => state.coursesReducer);
+  
+  // Find the current course
+  const course = courses.find((course: any) => course._id === courseId);
+  // const course = courses.find((course) => course._id === courseId);
   const { pathname } = useLocation();
     return (
     <div id="wd-courses">
@@ -39,6 +47,7 @@ export default function Courses() {
               <Route path="Piazza" element={<h2>Piazza </h2>} />
               <Route path="Zoom" element={<h2>Zoom </h2>} />
               <Route path="Assignments" element={<Assignments />} />
+              <Route path="Assignments/new/Editor" element={<AssignmentEditor />} />
               <Route path="Assignments/:aid" element={<AssignmentEditor />} />
               <Route path="Quizzes" element={<h2>Quizzes </h2>} />
               <Route path="Grades" element={<h2>Grades </h2>} />
