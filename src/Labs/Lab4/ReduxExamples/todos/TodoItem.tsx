@@ -2,9 +2,19 @@ import { Button, ListGroup } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { deleteTodo, setTodo } from "./todosReducer";
 
-export default function TodoItem({ todo }) {
-    const dispatch = useDispatch();
-    return (
+type Todo = {
+  id: string;
+  title: string;
+};
+
+interface TodoItemProps {
+  todo: Todo;
+}
+
+export default function TodoItem({ todo }: TodoItemProps) {
+  const dispatch = useDispatch();
+  
+  return (
     <ListGroup.Item>
       <div className="d-flex justify-content-between align-items-center">
         <span>{todo.title}</span>
@@ -31,6 +41,44 @@ export default function TodoItem({ todo }) {
     </ListGroup.Item>
   );
 }
+// import { Button, ListGroup } from "react-bootstrap";
+// import { useDispatch } from "react-redux";
+// import { deleteTodo, setTodo } from "./todosReducer";
+
+// type Todo = {
+//   id: string;
+//   title: string;
+// };
+
+// export default function TodoItem({ todo }: { todo: Todo }) {
+//     const dispatch = useDispatch();
+//     return (
+//     <ListGroup.Item>
+//       <div className="d-flex justify-content-between align-items-center">
+//         <span>{todo.title}</span>
+//         <div>
+//           <Button 
+//             onClick={() => dispatch(setTodo(todo))}
+//             id="wd-set-todo-click"
+//             variant="primary"
+//             size="sm"
+//             className="me-2"
+//           > 
+//             Edit 
+//           </Button>
+//           <Button 
+//             onClick={() => dispatch(deleteTodo(todo.id))}
+//             id="wd-delete-todo-click"
+//             variant="danger"
+//             size="sm"
+//           >
+//             Delete 
+//           </Button>
+//         </div>
+//       </div>
+//     </ListGroup.Item>
+//   );
+// }
 
 
 // import { Button, ListGroup } from "react-bootstrap";
