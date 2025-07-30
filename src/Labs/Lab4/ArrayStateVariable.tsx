@@ -4,9 +4,13 @@ export default function ArrayStateVariable() {
  const addElement = () => {
    setArray([...array, Math.floor(Math.random() * 100)]);
  };
- const deleteElement = (index: number) => {
-   setArray(array.filter((item, i) => i !== index));
- };
+//  const deleteElement = (index: number) => {
+//    setArray(array.filter((item, i) => i !== index));
+//  };
+    const deleteElement = (index: number) => {
+    setArray(array.filter((_, i) => i !== index));
+    };
+
  return (
   <div id="wd-array-state-variables">
    <h2>Array State Variable</h2>
