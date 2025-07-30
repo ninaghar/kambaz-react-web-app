@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
-import * as db from "../../Database";
+// import * as db from "../../Database";
 import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { MdOutlineAssignment } from "react-icons/md";
@@ -9,12 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AssignmentControls from "./AssignmentControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+// import LessonControlButtons from "../Modules/LessonControlButtons";
 import "../../styles.css";
 import type { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 // import { deleteAssignment } from "./reducer";
-import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
-import ListControlButtons from "./AssignmentItemControls";
+import {  deleteAssignment} from "./reducer";
+// import ListControlButtons from "./AssignmentItemControls";
 import AssignmentItemControls from "./AssignmentItemControls";
 
 export default function Assignments() {
