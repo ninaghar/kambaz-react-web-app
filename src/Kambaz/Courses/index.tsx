@@ -49,6 +49,7 @@ export default function Courses(
               <Route path="Assignments" element={<Assignments />} />
               <Route path="Assignments/new/Editor" element={<AssignmentEditor />} />
               <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+              <Route path="Assignments/:aid/Editor" element={<AssignmentEditor />} />
               <Route path="Quizzes" element={<h2>Quizzes </h2>} />
               <Route path="Grades" element={<h2>Grades </h2>} />
               <Route path="People" element={<PeopleTable />} />

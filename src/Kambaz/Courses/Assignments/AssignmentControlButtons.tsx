@@ -17,7 +17,9 @@ export default function AssignmentControlButtons() {
       </Badge>
 
       {/* Plus icon */}
-      <FaPlus className="fs-4 text-dark" />
+      <FaPlus 
+      className="fs-4 text-dark" 
+      />
 
       {/* Ellipsis icon */}
       <IoEllipsisVertical className="fs-4 text-dark" />

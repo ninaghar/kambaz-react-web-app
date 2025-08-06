@@ -1,11 +1,10 @@
 import { Form, Button, Row, Col, } from "react-bootstrap";
 import { useParams, Link, useNavigate } from "react-router-dom";
-// import * as db from "../../Database";
-
 import "react-datetime/css/react-datetime.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { courseId, aid } = useParams();
@@ -14,106 +13,90 @@ export default function AssignmentEditor() {
   
   console.log("Params:", { courseId, aid });
 
-  // const assignment = db.assignments.find(
-  //   (a) => a._id === aid && a.course === courseId
-  // );
-
-    // Get assignments from Redux store
+  // Get assignments from Redux store
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   
   // Determine if we're editing or creating
-  console.log("current aid:", aid);
-  // const isEditing = aid !== "new";
   const isEditing = aid && aid !== "new"; 
   console.log("isEditing:", isEditing);
-  const existingAssignment = isEditing ? assignments.find((a: any) => a._id === aid) : null;
 
-  // Assignment state
+  // Assignment state - matching your database structure
   const [assignment, setAssignment] = useState({
+    _id: "",
     title: "",
     description: "",
     points: 100,
-    dueDate: "",
+    available: "",
+    due: "",
     availableFrom: "",
-    availableUntil: "",
+    dueDate: "",
     course: courseId || "",
   });
 
-    // Load existing assignment data if editing
-  useEffect(() => {
-    if (isEditing && existingAssignment) {
+  // Fetch assignment from server if editing
+  const fetchAssignment = async () => {
+    if (!aid || aid === "new") return;
+    try {
+      const assignmentData = await assignmentsClient.findAssignmentById(aid);
       setAssignment({
-        title: existingAssignment.title || "",
-        description: existingAssignment.description || "",
-        points: existingAssignment.points || 100,
-        dueDate: existingAssignment.dueDate || existingAssignment.due || "",
-        availableFrom: existingAssignment.availableFrom || existingAssignment.available || "",
-        availableUntil: existingAssignment.availableUntil || "",
-        course: existingAssignment.course || courseId || "",
+        _id: assignmentData._id || "",
+        title: assignmentData.title || "",
+        description: assignmentData.description || "",
+        points: assignmentData.points || 100,
+        available: assignmentData.available || "",
+        due: assignmentData.due || "",
+        availableFrom: assignmentData.availableFrom || "",
+        dueDate: assignmentData.dueDate || "",
+        course: assignmentData.course || courseId || "",
       });
-    } else if (!isEditing) {
-      // Reset form for new assignment
-      setAssignment({
-        title: "",
-        description: "",
-        points: 100,
-        dueDate: "",
-        availableFrom: "",
-        availableUntil: "",
-        course: courseId || "",
-      });
+    } catch (error) {
+      console.error("Error fetching assignment:", error);
     }
-  }, [isEditing, existingAssignment, courseId, aid]);
-  // Load existing assignment data if editing
-  // useEffect(() => {
-  //   if (isEditing && existingAssignment) {
-  //     setAssignment({
-  //       title: existingAssignment.title || "",
-  //       description: existingAssignment.description || "",
-  //       points: existingAssignment.points || 100,
-  //       dueDate: existingAssignment.dueDate || existingAssignment.due || "",
-  //       availableFrom: existingAssignment.availableFrom || existingAssignment.available || "",
-  //       availableUntil: existingAssignment.availableUntil || "",
-  //       course: existingAssignment.course || courseId || "",
-  //     });
-  //   }
-  // }, [isEditing, existingAssignment, courseId]);
+  };
 
-  const handleSave = () => {
+  useEffect(() => {
+    fetchAssignment();
+  }, [aid]);
+
+  // Helper function to format date for input fields (ISO to YYYY-MM-DD)
+  const formatDateForInput = (isoDate: string) => {
+    if (!isoDate) return "";
+    return isoDate.slice(0, 10);
+  };
+
+  // Helper function to format date for display text
+  const formatDateForDisplay = (date: Date) => {
+    return date.toLocaleDateString() + " at " + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  };
+
+  const saveAssignment = async () => {
     if (!assignment.title.trim()) {
       alert("Assignment title is required");
       return;
     }
 
-    if (isEditing) {
-      // Update existing assignment
-      dispatch(updateAssignment({
-        ...existingAssignment,
-        ...assignment,
-        _id: aid,
-        // Keep backward compatibility
-        due: assignment.dueDate,
-        available: assignment.availableFrom,
-      }));
-      console.log("Updated assignment:", assignment.title);
-    } else {
-      // Create new assignment
-      dispatch(addAssignment({
-        ...assignment,
-        // Keep backward compatibility
-        due: assignment.dueDate,
-        available: assignment.availableFrom,
-      }));
-       console.log("Created new assignment:", assignment.title);
+    if (!courseId) return;
+    
+    try {
+      if (isEditing) {
+        // Update existing assignment
+        const updatedAssignment = await assignmentsClient.updateAssignment(assignment);
+        dispatch(updateAssignment(updatedAssignment));
+        console.log("Updated assignment:", assignment.title);
+      } else {
+        // Create new assignment
+        const newAssignment = await assignmentsClient.createAssignmentForCourse(courseId, assignment);
+        dispatch(addAssignment(newAssignment));
+        console.log("Created new assignment:", assignment.title);
+      }
+      navigate(`/Kambaz/Courses/${courseId}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
     }
-
-    // Navigate back to assignments
-    navigate(`/Kambaz/Courses/${courseId}/Assignments`);
   };
 
   const handleCancel = () => {
     console.log("Cancelled assignment editing");
-    // Navigate back without saving
     navigate(`/Kambaz/Courses/${courseId}/Assignments`);
   };
 
@@ -124,23 +107,40 @@ export default function AssignmentEditor() {
     }));
   };
 
-  if (!assignments) {
-    return <div>Assignment not found</div>;
-  }
+  // Handle date changes with proper formatting
+  const handleDateChange = (field: string, value: string) => {
+    const date = new Date(value);
+    const isoString = date.toISOString();
+    const displayString = formatDateForDisplay(date);
+
+    if (field === "dueDate") {
+      setAssignment(prev => ({
+        ...prev,
+        dueDate: isoString,
+        due: displayString
+      }));
+    } else if (field === "availableFrom") {
+      setAssignment(prev => ({
+        ...prev,
+        availableFrom: isoString,
+        available: `Available from ${displayString}`
+      }));
+    }
+  };
 
   return (
     <div id="wd-assignments-editor" className="p-4">
       <h2>{isEditing ? "Edit Assignment" : "New Assignment"}</h2>
-          <hr />
+      <hr />
       <Form>
         <Form.Group className="mb-3" controlId="wd-name">
           <Form.Label><strong>Assignment Name</strong></Form.Label>
           <Form.Control 
-          type="text" 
-          defaultValue={assignment.title}
-          onChange={(e) => handleInputChange("title", e.target.value)}
-                placeholder="Enter assignment name"
-                id="wd-name"
+            type="text" 
+            value={assignment.title}
+            onChange={(e) => handleInputChange("title", e.target.value)}
+            placeholder="Enter assignment name"
+            id="wd-name"
           />
         </Form.Group>
 
@@ -149,11 +149,10 @@ export default function AssignmentEditor() {
           <Form.Control
             as="textarea"
             rows={6}
-            defaultValue={assignment.description}
+            value={assignment.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
-                placeholder="Enter assignment description"
-                id="wd-description"
-
+            placeholder="Enter assignment description"
+            id="wd-description"
           />
         </Form.Group>
 
@@ -166,11 +165,314 @@ export default function AssignmentEditor() {
               type="number" 
               value={assignment.points}
               id="wd-points"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange("points", parseInt(e.target.value) || 0)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                handleInputChange("points", parseInt(e.target.value) || 0)
+              }
               placeholder="100"
             />
           </Col>
         </Row>
+
+        <Row className="mb-4">
+          <Col md={3}>
+            <Form.Label htmlFor="wd-assign-to"><strong>Assign</strong></Form.Label>
+          </Col>
+          <Col md={9}>
+            <div className="border rounded p-3">
+              <Row>
+                {/* Due Date */}
+                <Col>
+                  <Form.Group className="mb-3" controlId="wd-due-date">
+                    <Form.Label><strong>Due</strong></Form.Label>
+                    <Form.Control 
+                      type="date" 
+                      value={formatDateForInput(assignment.dueDate)} 
+                      onChange={(e) => handleDateChange("dueDate", e.target.value)}
+                      id="wd-due-date"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <Form.Group controlId="wd-available-from">
+                    <Form.Label><strong>Available from</strong></Form.Label>
+                    <Form.Control 
+                      type="date" 
+                      value={formatDateForInput(assignment.availableFrom)}  
+                      onChange={(e) => handleDateChange("availableFrom", e.target.value)}
+                      id="wd-available-from"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="wd-available-until">
+                    <Form.Label><strong>Until</strong></Form.Label>
+                    <Form.Control 
+                      type="date" 
+                      onChange={(e) => handleInputChange("availableUntil", e.target.value)}
+                      id="wd-available-until"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+
+        <hr />
+
+        <div className="d-flex justify-content-end gap-2 mt-3">
+          <Button variant="secondary" onClick={handleCancel} id="wd-cancel">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={saveAssignment} id="wd-save">
+            Save
+          </Button>
+        </div>
+      </Form>
+    </div>
+  );
+}
+
+
+
+
+
+// import { Form, Button, Row, Col, } from "react-bootstrap";
+// import { useParams, Link, useNavigate } from "react-router-dom";
+// // import * as db from "../../Database";
+
+// import "react-datetime/css/react-datetime.css";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useEffect, useState } from "react";
+// import { addAssignment, updateAssignment } from "./reducer";
+// import * as assignmentsClient from "./client";
+
+// export default function AssignmentEditor() {
+//   const { courseId, aid } = useParams();
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+  
+//   console.log("Params:", { courseId, aid });
+
+//   // const assignment = db.assignments.find(
+//   //   (a) => a._id === aid && a.course === courseId
+//   // );
+
+//     // Get assignments from Redux store
+//   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  
+//   // Determine if we're editing or creating
+//   console.log("current aid:", aid);
+//   // const isEditing = aid !== "new";
+//   const isEditing = aid && aid !== "new"; 
+//   console.log("isEditing:", isEditing);
+//   const existingAssignment = isEditing ? assignments.find((a: any) => a._id === aid) : null;
+
+//   // Assignment state
+//   const [assignment, setAssignment] = useState({
+//      _id: "",
+//     title: "",
+//     description: "",
+//     points: 100,
+//     dueDate: "",
+//     availableFrom: "",
+//     availableUntil: "",
+//     course: courseId || "",
+//   });
+
+//     // Load existing assignment data if editing
+//   useEffect(() => {
+//     if (isEditing && existingAssignment) {
+//       setAssignment({
+//         title: existingAssignment.title || "",
+//         description: existingAssignment.description || "",
+//         points: existingAssignment.points || 100,
+//         dueDate: existingAssignment.dueDate || existingAssignment.due || "",
+//         availableFrom: existingAssignment.availableFrom || existingAssignment.available || "",
+//         availableUntil: existingAssignment.availableUntil || "",
+//         course: existingAssignment.course || courseId || "",
+//       });
+//     } else if (!isEditing) {
+//       // Reset form for new assignment
+//       setAssignment({
+//         title: "",
+//         description: "",
+//         points: 100,
+//         dueDate: "",
+//         availableFrom: "",
+//         availableUntil: "",
+//         course: courseId || "",
+//       });
+//     }
+//   }, [isEditing, existingAssignment, courseId, aid]);
+
+
+//   const handleSave = () => {
+//     if (!assignment.title.trim()) {
+//       alert("Assignment title is required");
+//       return;
+//     }
+
+//     if (isEditing) {
+//       // Update existing assignment
+//       dispatch(updateAssignment({
+//         ...existingAssignment,
+//         ...assignment,
+//         _id: aid,
+//         // Keep backward compatibility
+//         due: assignment.dueDate,
+//         available: assignment.availableFrom,
+//       }));
+//       console.log("Updated assignment:", assignment.title);
+//     } else {
+//       // Create new assignment
+//       dispatch(addAssignment({
+//         ...assignment,
+//         // Keep backward compatibility
+//         due: assignment.dueDate,
+//         available: assignment.availableFrom,
+//       }));
+//        console.log("Created new assignment:", assignment.title);
+//     }
+
+//     // Navigate back to assignments
+//     navigate(`/Kambaz/Courses/${courseId}/Assignments`);
+//   };
+
+//   const handleCancel = () => {
+//     console.log("Cancelled assignment editing");
+//     // Navigate back without saving
+//     navigate(`/Kambaz/Courses/${courseId}/Assignments`);
+//   };
+
+//   const handleInputChange = (field: string, value: any) => {
+//     setAssignment(prev => ({
+//       ...prev,
+//       [field]: value
+//     }));
+//   };
+
+//   if (!assignments) {
+//     return <div>Assignment not found</div>;
+//   }
+
+//   return (
+//     <div id="wd-assignments-editor" className="p-4">
+//       <h2>{isEditing ? "Edit Assignment" : "New Assignment"}</h2>
+//           <hr />
+//       <Form>
+//         <Form.Group className="mb-3" controlId="wd-name">
+//           <Form.Label><strong>Assignment Name</strong></Form.Label>
+//           <Form.Control 
+//           type="text" 
+//           defaultValue={assignment.title}
+//           onChange={(e) => handleInputChange("title", e.target.value)}
+//                 placeholder="Enter assignment name"
+//                 id="wd-name"
+//           />
+//         </Form.Group>
+
+//         <Form.Group className="mb-4" controlId="wd-description">
+//           <Form.Label><strong>Description</strong></Form.Label>
+//           <Form.Control
+//             as="textarea"
+//             rows={6}
+//             defaultValue={assignment.description}
+//             onChange={(e) => handleInputChange("description", e.target.value)}
+//                 placeholder="Enter assignment description"
+//                 id="wd-description"
+
+//           />
+//         </Form.Group>
+
+//         <Row className="mb-3">
+//           <Col md={3}>
+//             <Form.Label htmlFor="wd-points">Points</Form.Label>
+//           </Col>
+//           <Col>
+//             <Form.Control 
+//               type="number" 
+//               value={assignment.points}
+//               id="wd-points"
+//               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange("points", parseInt(e.target.value) || 0)}
+//               placeholder="100"
+//             />
+//           </Col>
+//         </Row>
+
+
+
+//         <Row className="mb-4">
+//           <Col md={3}>
+//             <Form.Label htmlFor="wd-assign-to"><strong>Assign</strong></Form.Label>
+//           </Col>
+//           <Col md={9}>
+//             <div className="border rounded p-3">
+//               {/* <Form.Group className="mb-3" controlId="wd-assign-to">
+//                 <Form.Label><strong>Assign to</strong></Form.Label>
+//                 <Form.Control type="text" defaultValue="Everyone" />
+//               </Form.Group> */}
+
+//               <Row>
+//                 {/* Due Date */}
+//                 <Col>
+//                   <Form.Group className="mb-3" controlId="wd-due-date">
+//                     <Form.Label><strong>Due</strong></Form.Label>
+//                     <Form.Control 
+//                       type="date" 
+//                       defaultValue={assignment.dueDate ? assignment.dueDate.slice(0, 10) : "2024-05-25"} 
+//                       onChange={(e) => handleInputChange("dueDate", e.target.value)}
+//                       id="wd-due-date"
+//                     />
+//                   </Form.Group>
+//                 </Col>
+//               </Row>
+
+//               <Row>
+//                 <Col>
+//                   <Form.Group controlId="wd-available-from">
+//                     <Form.Label><strong>Available from</strong></Form.Label>
+//                     <Form.Control 
+//                     type="date" 
+//                     defaultValue={assignment.availableFrom ? assignment.availableFrom.slice(0, 10) : "2024-05-02"}  
+//                     onChange={(e) => handleInputChange("availableFrom", e.target.value)}
+//                     id="wd-available-from"
+//                     />
+//                   </Form.Group>
+//                 </Col>
+//                 <Col>
+//                   <Form.Group controlId="wd-available-until">
+//                     <Form.Label><strong>Until</strong></Form.Label>
+//                     <Form.Control 
+//                     type="date" 
+//                     onChange={(e) => handleInputChange("availableUntil", e.target.value)}
+//                     id="wd-available-until"
+//                     />
+//                   </Form.Group>
+//                 </Col>
+//               </Row>
+//             </div>
+//           </Col>
+//         </Row>
+
+//         <hr />
+
+//         <div className="d-flex justify-content-end gap-2 mt-3">
+//           <Link to={`/Kambaz/Courses/${courseId}/Assignments`}>
+//             <Button variant="secondary" onClick={handleCancel} id="wd-cancel">Cancel</Button>
+//           </Link>
+//           <Link to={`/Kambaz/Courses/${courseId}/Assignments`}>
+//             <Button variant="danger" onClick={handleSave} id="wd-save">Save</Button>
+//           </Link>
+//         </div>
+//       </Form>
+//     </div>
+//   );
+// }
+
 
         {/* <Row className="mb-3">
           <Col md={3}>
@@ -216,70 +518,17 @@ export default function AssignmentEditor() {
           </Col>
         </Row> */}
 
-        <Row className="mb-4">
-          <Col md={3}>
-            <Form.Label htmlFor="wd-assign-to"><strong>Assign</strong></Form.Label>
-          </Col>
-          <Col md={9}>
-            <div className="border rounded p-3">
-              {/* <Form.Group className="mb-3" controlId="wd-assign-to">
-                <Form.Label><strong>Assign to</strong></Form.Label>
-                <Form.Control type="text" defaultValue="Everyone" />
-              </Form.Group> */}
-
-              <Row>
-                {/* Due Date */}
-                <Col>
-                  <Form.Group className="mb-3" controlId="wd-due-date">
-                    <Form.Label><strong>Due</strong></Form.Label>
-                    <Form.Control 
-                      type="date" 
-                      defaultValue={assignment.dueDate ? assignment.dueDate.slice(0, 10) : "2024-05-25"} 
-                      onChange={(e) => handleInputChange("dueDate", e.target.value)}
-                      id="wd-due-date"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <Form.Group controlId="wd-available-from">
-                    <Form.Label><strong>Available from</strong></Form.Label>
-                    <Form.Control 
-                    type="date" 
-                    defaultValue={assignment.availableFrom ? assignment.availableFrom.slice(0, 10) : "2024-05-02"}  
-                    onChange={(e) => handleInputChange("availableFrom", e.target.value)}
-                    id="wd-available-from"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group controlId="wd-available-until">
-                    <Form.Label><strong>Until</strong></Form.Label>
-                    <Form.Control 
-                    type="date" 
-                    onChange={(e) => handleInputChange("availableUntil", e.target.value)}
-                    id="wd-available-until"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-
-        <hr />
-
-        <div className="d-flex justify-content-end gap-2 mt-3">
-          <Link to={`/Kambaz/Courses/${courseId}/Assignments`}>
-            <Button variant="secondary" onClick={handleCancel} id="wd-cancel">Cancel</Button>
-          </Link>
-          <Link to={`/Kambaz/Courses/${courseId}/Assignments`}>
-            <Button variant="danger" onClick={handleSave} id="wd-save">Save</Button>
-          </Link>
-        </div>
-      </Form>
-    </div>
-  );
-}
+          // Load existing assignment data if editing
+  // useEffect(() => {
+  //   if (isEditing && existingAssignment) {
+  //     setAssignment({
+  //       title: existingAssignment.title || "",
+  //       description: existingAssignment.description || "",
+  //       points: existingAssignment.points || 100,
+  //       dueDate: existingAssignment.dueDate || existingAssignment.due || "",
+  //       availableFrom: existingAssignment.availableFrom || existingAssignment.available || "",
+  //       availableUntil: existingAssignment.availableUntil || "",
+  //       course: existingAssignment.course || courseId || "",
+  //     });
+  //   }
+  // }, [isEditing, existingAssignment, courseId]);

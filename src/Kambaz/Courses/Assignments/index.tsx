@@ -1,39 +1,82 @@
-
 import { useParams, useNavigate } from "react-router-dom";
-// import * as db from "../../Database";
 import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { MdOutlineAssignment } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import AssignmentControls from "./AssignmentControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-// import LessonControlButtons from "../Modules/LessonControlButtons";
-import "../../styles.css";
-import type { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
-// import { deleteAssignment } from "./reducer";
-import {  deleteAssignment} from "./reducer";
-// import ListControlButtons from "./AssignmentItemControls";
 import AssignmentItemControls from "./AssignmentItemControls";
+import { setAssignments, addAssignment, deleteAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
+import "../../styles.css";
 
 export default function Assignments() {
   const { courseId } = useParams();
-  // const dispatch = useDispatch();
-  // const assignments = db.assignments.filter(a => a.course === courseId);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [assignmentTitle, setAssignmentTitle] = useState("");
 
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   console.log("Assignments from Redux:", assignments); 
 
-  // Filter assignments for current course
-  // const courseAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
-
   const state = useSelector((state: any) => state);
   console.log("Full Redux state:", state);
   console.log("Available reducers:", Object.keys(state));
+
+  // Fetch assignments from server
+  const fetchAssignments = async () => {
+    if (!courseId) return;
+    try {
+      const assignments = await assignmentsClient.findAssignmentsForCourse(courseId);
+      dispatch(setAssignments(assignments));
+    } catch (error) {
+      console.error("Error fetching assignments:", error);
+    }
+  };
+
+  // Create new assignment
+  const createAssignmentForCourse = async () => {
+    if (!courseId) return;
+    const now = new Date();
+    const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week from now
+    
+    const newAssignment = { 
+      title: assignmentTitle || "New Assignment", 
+      course: courseId,
+      description: "New Assignment Description",
+      points: 100,
+      available: `Available from ${now.toLocaleDateString()}`,
+      due: `${dueDate.toLocaleDateString()} at 11:59pm`,
+      availableFrom: now.toISOString(),
+      dueDate: dueDate.toISOString()
+    };
+    
+    try {
+      const assignment = await assignmentsClient.createAssignmentForCourse(courseId, newAssignment);
+      dispatch(addAssignment(assignment));
+      setAssignmentTitle("");
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+    }
+  };
+
+  // Delete assignment
+  const removeAssignment = async (assignmentId: string) => {
+    try {
+      await assignmentsClient.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
+  };
+
+  // Fetch assignments on component mount
+  useEffect(() => {
+    fetchAssignments();
+  }, [courseId]);
 
   const handleAddAssignment = () => {
     // Navigate to AssignmentEditor for creating new assignment
@@ -41,70 +84,76 @@ export default function Assignments() {
   };
 
   const handleDeleteAssignment = (assignmentId: string) => {
-    dispatch(deleteAssignment(assignmentId));
+    removeAssignment(assignmentId);
   };
-
-  // const handleEditAssignment = (assignmentId: string) => {
-  //   // Navigate to AssignmentEditor for editing existing assignment
-  //   navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignmentId}/Editor`);
-  // };
 
   return (
     <div id="wd-assignments">
       <AssignmentControls
-       handleAddAssignment={handleAddAssignment}
-
-       />
+        handleAddAssignment={handleAddAssignment}
+      />
       <br /><br />
+      
       <ListGroup className="rounded-0" id="wd-assignments">
         <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
             <div>
               <BsGripVertical className="me-2 fs-3" />
               <IoIosArrowDown className="me-2 fs-4" />
-              ASSIGNMENTS
+              ASSIGNMENTS ({assignments.length})
             </div>
-            <AssignmentControlButtons 
-            />
+            <AssignmentControlButtons />
           </div>
 
           <ListGroup className="wd-lessons rounded-0">
-            {assignments.map((assignment: { _id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; available: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; due: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; points: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
-              <ListGroup.Item
-                key={assignment._id}
-                className="wd-lesson p-3 ps-1"
-              >
-                <div className="d-flex justify-content-between align-items-start">
-                  <div className="d-flex">
-                    <div className="me-2">
-                      <BsGripVertical className="fs-3" />
-                      <MdOutlineAssignment className="fs-3 text-success" />
-                    </div>
-                    <div>
-                      <a
-                        href={`#/Kambaz/Courses/${courseId}/Assignments/${assignment._id}`}
-                        className="wd-assignment-link text-decoration-none text-dark fw-bold"
-                      >
-                        {assignment.title}
-                      </a>
-                      <div className="small text-muted">
-                        <span className="text-danger">Multiple Modules</span> |{" "}
-                        <strong>{assignment.available}</strong> |
-                        <br />
-                        <strong>Due</strong> {assignment.due} | {assignment.points} pts
-                      </div>
-                    </div>
-                  </div>
-                  <AssignmentItemControls
-                    assignmentId={assignment._id ? String(assignment._id) : undefined}
-                    assignmentTitle={assignment.title != null ? String(assignment.title) : undefined}
-                    onDelete={() => handleDeleteAssignment(assignment._id ? String(assignment._id) : "")}
-                  />
-                  {/* <ListControlButtons
-                  /> */}
+            {assignments.length === 0 ? (
+              <ListGroup.Item className="text-center p-4">
+                <div className="text-muted">
+                  No assignments found for this course.
                 </div>
               </ListGroup.Item>
-            ))}
+            ) : (
+              assignments.map((assignment: any) => (
+                <ListGroup.Item
+                  key={assignment._id}
+                  className="wd-lesson p-3 ps-1"
+                >
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div className="d-flex">
+                      <div className="me-2">
+                        <BsGripVertical className="fs-3" />
+                        <MdOutlineAssignment className="fs-3 text-success" />
+                      </div>
+                      <div>
+                        <a
+                          href={`#/Kambaz/Courses/${courseId}/Assignments/${assignment._id}/Editor`}
+                          className="wd-assignment-link text-decoration-none text-dark fw-bold"
+                        >
+                          {assignment.title}
+                        </a>
+                        <div className="small text-muted">
+                          <span className="text-danger">Multiple Modules</span> |{" "}
+                          <strong>{assignment.available || "Available"}</strong>
+                          <br />
+                          <strong>Due</strong> {assignment.due || assignment.dueDate} | {assignment.points} pts
+                        </div>
+                        {assignment.description && (
+                          <div className="small text-muted mt-1">
+                            {assignment.description.substring(0, 100)}
+                            {assignment.description.length > 100 ? "..." : ""}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <AssignmentItemControls
+                      assignmentId={assignment._id ? String(assignment._id) : undefined}
+                      assignmentTitle={assignment.title != null ? String(assignment.title) : undefined}
+                      onDelete={() => handleDeleteAssignment(assignment._id ? String(assignment._id) : "")}
+                    />
+                  </div>
+                </ListGroup.Item>
+              ))
+            )}
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>
@@ -113,6 +162,122 @@ export default function Assignments() {
 }
 
 
+
+
+// import { useParams, useNavigate } from "react-router-dom";
+// // import * as db from "../../Database";
+// import { ListGroup } from "react-bootstrap";
+// import { BsGripVertical } from "react-icons/bs";
+// import { MdOutlineAssignment } from "react-icons/md";
+// import { IoIosArrowDown } from "react-icons/io";
+// import { useDispatch, useSelector } from "react-redux";
+
+// import AssignmentControls from "./AssignmentControls";
+// import AssignmentControlButtons from "./AssignmentControlButtons";
+// // import LessonControlButtons from "../Modules/LessonControlButtons";
+// import "../../styles.css";
+// import type { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+// // import { deleteAssignment } from "./reducer";
+// import {  deleteAssignment} from "./reducer";
+// // import ListControlButtons from "./AssignmentItemControls";
+// import AssignmentItemControls from "./AssignmentItemControls";
+
+// export default function Assignments() {
+//   const { courseId } = useParams();
+//   // const dispatch = useDispatch();
+//   // const assignments = db.assignments.filter(a => a.course === courseId);
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+
+//   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+//   console.log("Assignments from Redux:", assignments); 
+
+//   // Filter assignments for current course
+//   // const courseAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
+
+//   const state = useSelector((state: any) => state);
+//   console.log("Full Redux state:", state);
+//   console.log("Available reducers:", Object.keys(state));
+
+//   const handleAddAssignment = () => {
+//     // Navigate to AssignmentEditor for creating new assignment
+//     navigate(`/Kambaz/Courses/${courseId}/Assignments/new/Editor`);
+//   };
+
+//   const handleDeleteAssignment = (assignmentId: string) => {
+//     dispatch(deleteAssignment(assignmentId));
+//   };
+
+ 
+
+//   return (
+//     <div id="wd-assignments">
+//       <AssignmentControls
+//        handleAddAssignment={handleAddAssignment}
+
+//        />
+//       <br /><br />
+//       <ListGroup className="rounded-0" id="wd-assignments">
+//         <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+//           <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+//             <div>
+//               <BsGripVertical className="me-2 fs-3" />
+//               <IoIosArrowDown className="me-2 fs-4" />
+//               ASSIGNMENTS
+//             </div>
+//             <AssignmentControlButtons 
+//             />
+//           </div>
+
+//           <ListGroup className="wd-lessons rounded-0">
+//             {assignments.map((assignment: { _id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; available: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; due: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; points: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+//               <ListGroup.Item
+//                 key={assignment._id}
+//                 className="wd-lesson p-3 ps-1"
+//               >
+//                 <div className="d-flex justify-content-between align-items-start">
+//                   <div className="d-flex">
+//                     <div className="me-2">
+//                       <BsGripVertical className="fs-3" />
+//                       <MdOutlineAssignment className="fs-3 text-success" />
+//                     </div>
+//                     <div>
+//                       <a
+//                         href={`#/Kambaz/Courses/${courseId}/Assignments/${assignment._id}`}
+//                         className="wd-assignment-link text-decoration-none text-dark fw-bold"
+//                       >
+//                         {assignment.title}
+//                       </a>
+//                       <div className="small text-muted">
+//                         <span className="text-danger">Multiple Modules</span> |{" "}
+//                         <strong>{assignment.available}</strong> |
+//                         <br />
+//                         <strong>Due</strong> {assignment.due} | {assignment.points} pts
+//                       </div>
+//                     </div>
+//                   </div>
+//                   <AssignmentItemControls
+//                     assignmentId={assignment._id ? String(assignment._id) : undefined}
+//                     assignmentTitle={assignment.title != null ? String(assignment.title) : undefined}
+//                     onDelete={() => handleDeleteAssignment(assignment._id ? String(assignment._id) : "")}
+//                   />
+//                   {/* <ListControlButtons
+//                   /> */}
+//                 </div>
+//               </ListGroup.Item>
+//             ))}
+//           </ListGroup>
+//         </ListGroup.Item>
+//       </ListGroup>
+//     </div>
+//   );
+// }
+
+ // const handleEditAssignment = (assignmentId: string) => {
+  //   // Navigate to AssignmentEditor for editing existing assignment
+  //   navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignmentId}/Editor`);
+  // };
 
 // import { useParams } from "react-router-dom";
 // import db from "../Database";
