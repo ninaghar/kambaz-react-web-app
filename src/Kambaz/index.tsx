@@ -23,14 +23,25 @@ export default function Kambaz() {
   const [allCourses, setAllCourses] = useState<any[]>([]);
 
   // Fetch user's enrolled courses from server
+  // const fetchCourses = async () => {
+  //   try {
+  //     const courses = await userClient.findMyCourses();
+  //     setCourses(courses);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   const fetchCourses = async () => {
-    try {
-      const courses = await userClient.findMyCourses();
-      setCourses(courses);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    // First verify we have a valid session
+    await userClient.profile(); // This will throw if not authenticated
+    const courses = await userClient.findMyCourses();
+    setCourses(courses);
+  } catch (error) {
+    console.log("User not authenticated, can't fetch courses");
+    setCourses([]); // Clear courses if not authenticated
+  }
+};
 
   // Fetch all courses from server
   const fetchAllCourses = async () => {
@@ -66,11 +77,20 @@ export default function Kambaz() {
     }));
   };
 
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     fetchCourses();
+  //   }
+  // }, [currentUser]);
   useEffect(() => {
-    if (currentUser) {
-      fetchCourses();
-    }
-  }, [currentUser]);
+  if (currentUser) {
+    console.log("Current user exists, fetching courses...");
+    fetchCourses();
+  } else {
+    console.log("No current user, clearing courses");
+    setCourses([]);
+  }
+}, [currentUser]);
 
   return (
     <Session>
