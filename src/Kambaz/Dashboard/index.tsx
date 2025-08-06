@@ -257,7 +257,7 @@ export default function Dashboard({
                   {/* Course action buttons */}
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     {/* Go button - only show if enrolled */}
-                    {isEnrolled(courseItem._id) && (
+                    {(isEnrolled(courseItem._id)  )&& (
                       <Link to={`/Kambaz/Courses/${courseItem._id}/Home`} className="btn btn-primary">
                         Go
                       </Link>
