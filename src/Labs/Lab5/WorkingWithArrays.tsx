@@ -16,57 +16,57 @@ export default function WorkingWithArrays() {
   });
 
   const API = `${REMOTE_SERVER}/lab5/todos`;
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+//   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Test the error display first
-  const testErrorDisplay = () => {
-    setErrorMessage(" This is a test error message! If you see this, error display is working.");
-  };
+//   const testErrorDisplay = () => {
+//     setErrorMessage(" This is a test error message! If you see this, error display is working.");
+//   };
 
-  const clearError = () => {
-    setErrorMessage(null);
-  };
+//   const clearError = () => {
+//     setErrorMessage(null);
+//   };
 
   // Your existing updateTodo and deleteTodo with better error handling
-  const updateTodo = async (todo: any) => {
-    try {
-      console.log("Attempting to update todo:", todo);
-      await client.updateTodo(todo);
-      setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
-      setErrorMessage(null); // Clear any previous errors
-      console.log(" Update successful");
-    } catch (error: any) {
-      console.log(" Update failed:", error);
-      const message = error.response?.data?.message || `Unable to update Todo with ID ${todo.id}`;
-      setErrorMessage(message);
-    }
-  };
+//   const updateTodo = async (todo: any) => {
+//     try {
+//       console.log("Attempting to update todo:", todo);
+//       await client.updateTodo(todo);
+//       setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
+//       setErrorMessage(null); // Clear any previous errors
+//       console.log(" Update successful");
+//     } catch (error: any) {
+//       console.log(" Update failed:", error);
+//       const message = error.response?.data?.message || `Unable to update Todo with ID ${todo.id}`;
+//       setErrorMessage(message);
+//     }
+//   };
 
-  const deleteTodo = async (todo: any) => {
-    try {
-      console.log("Attempting to delete todo:", todo);
-      await client.deleteTodo(todo);
-      const newTodos = todos.filter((t) => t.id !== todo.id);
-      setTodos(newTodos);
-      setErrorMessage(null); // Clear any previous errors
-      console.log("Delete successful");
-    } catch (error: any) {
-      console.log(" Delete failed:", error);
-      const message = error.response?.data?.message || `Unable to delete Todo with ID ${todo.id}`;
-      setErrorMessage(message);
-    }
-  };
+//   const deleteTodo = async (todo: any) => {
+//     try {
+//       console.log("Attempting to delete todo:", todo);
+//       await client.deleteTodo(todo);
+//       const newTodos = todos.filter((t) => t.id !== todo.id);
+//       setTodos(newTodos);
+//       setErrorMessage(null); // Clear any previous errors
+//       console.log("Delete successful");
+//     } catch (error: any) {
+//       console.log(" Delete failed:", error);
+//       const message = error.response?.data?.message || `Unable to delete Todo with ID ${todo.id}`;
+//       setErrorMessage(message);
+//     }
+//   };
 
-  const fetchTodos = async () => {
-    try {
-      const fetchedTodos = await client.fetchTodos();
-      setTodos(fetchedTodos);
-      setErrorMessage(null);
-    } catch (error: any) {
-      console.log("Error fetching todos:", error);
-      setErrorMessage("Error fetching todos");
-    }
-  };
+//   const fetchTodos = async () => {
+//     try {
+//       const fetchedTodos = await client.fetchTodos();
+//       setTodos(fetchedTodos);
+//       setErrorMessage(null);
+//     } catch (error: any) {
+//       console.log("Error fetching todos:", error);
+//       setErrorMessage("Error fetching todos");
+//     }
+//   };
 
   return (
     <div id="wd-working-with-arrays">

@@ -59,14 +59,14 @@ export default function WorkingWithArraysAsynchronously() {
 
   const deleteTodo = async (todo: any) => {
     try {
-      console.log("🗑️ Attempting to delete todo:", todo);
+      console.log(" Attempting to delete todo:", todo);
       await client.deleteTodo(todo);
       const newTodos = todos.filter((t) => t.id !== todo.id);
       setTodos(newTodos);
       setErrorMessage(null);
-      console.log("✅ Delete successful");
+      console.log("Delete successful");
     } catch (error: any) {
-      console.log("❌ Delete failed:", error);
+      console.log(" Delete failed:", error);
       const message = error.response?.data?.message || `Unable to delete Todo with ID ${todo.id}`;
       setErrorMessage(message);
     }
@@ -85,18 +85,18 @@ export default function WorkingWithArraysAsynchronously() {
       await client.updateTodo(todo);
       setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
       setErrorMessage(null);
-      console.log("✅ Update successful");
+      console.log(" Update successful");
     } catch (error: any) {
-      console.log("❌ Update failed:", error);
+      console.log(" Update failed:", error);
       const message = error.response?.data?.message || `Unable to update Todo with ID ${todo.id}`;
       setErrorMessage(message);
     }
   };
 
   // Test function to verify error display works
-  const testError = () => {
-    setErrorMessage("🚨 Test Error: This proves error display is working!");
-  };
+//   const testError = () => {
+//     setErrorMessage(" Test Error: This proves error display is working!");
+//   };
 
   useEffect(() => {
     fetchTodos();
