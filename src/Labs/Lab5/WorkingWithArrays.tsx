@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { FormControl } from "react-bootstrap";
-import * as client from "./client";
+// import * as client from "./client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 
 export default function WorkingWithArrays() {
-  const [todos, setTodos] = useState<any[]>([]);
+  const [todos, _setTodos] = useState<any[]>([]);
   const [todo, setTodo] = useState({
     id: "1",
     title: "NodeJS Assignment",
