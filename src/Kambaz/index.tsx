@@ -6,7 +6,7 @@ import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import Session from "./Account/Session";
-import * as client from "./Courses/client";
+// import * as client from "./Courses/client";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
 import ProtectedRoute from './Account/ProtectedRoute';

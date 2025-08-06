@@ -4,7 +4,7 @@ import { BsGripVertical } from "react-icons/bs";
 import { MdOutlineAssignment } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import AssignmentControls from "./AssignmentControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
