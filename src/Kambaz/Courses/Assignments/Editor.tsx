@@ -1,5 +1,5 @@
 import { Form, Button, Row, Col, } from "react-bootstrap";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "react-datetime/css/react-datetime.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export default function AssignmentEditor() {
   console.log("Params:", { courseId, aid });
 
   // Get assignments from Redux store
-  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   
   // Determine if we're editing or creating
   const isEditing = aid && aid !== "new"; 

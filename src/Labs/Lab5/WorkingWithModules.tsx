@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 
 export default function WorkingWithModules() {
-  const [module, setModule] = useState({
+  const [module, _setModule] = useState({
     id: "",
     name: "",
     description: "",

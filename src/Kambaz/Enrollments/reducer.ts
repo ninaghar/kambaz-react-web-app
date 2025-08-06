@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments } from "../Database";
+// import { enrollments } from "../Database";
 
 // create reducer's initial state with
 // default enrollments copied from database

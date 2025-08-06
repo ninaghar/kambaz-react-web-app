@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enrollUser, unenrollUser, setEnrollments } from "../Enrollments/reducer";
 import { Card, Col, FormControl, Row } from "react-bootstrap";
-import * as courseClient from "../Courses/client";
+// import * as courseClient from "../Courses/client";
 import * as enrollmentClient from "../Enrollments/client";
 
 interface DashboardProps {

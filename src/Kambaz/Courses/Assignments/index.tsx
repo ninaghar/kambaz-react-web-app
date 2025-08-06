@@ -38,30 +38,30 @@ export default function Assignments() {
   };
 
   // Create new assignment
-  const createAssignmentForCourse = async () => {
-    if (!courseId) return;
-    const now = new Date();
-    const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week from now
+  // const createAssignmentForCourse = async () => {
+  //   if (!courseId) return;
+  //   const now = new Date();
+  //   const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week from now
     
-    const newAssignment = { 
-      title: assignmentTitle || "New Assignment", 
-      course: courseId,
-      description: "New Assignment Description",
-      points: 100,
-      available: `Available from ${now.toLocaleDateString()}`,
-      due: `${dueDate.toLocaleDateString()} at 11:59pm`,
-      availableFrom: now.toISOString(),
-      dueDate: dueDate.toISOString()
-    };
+  //   const newAssignment = { 
+  //     title: assignmentTitle || "New Assignment", 
+  //     course: courseId,
+  //     description: "New Assignment Description",
+  //     points: 100,
+  //     available: `Available from ${now.toLocaleDateString()}`,
+  //     due: `${dueDate.toLocaleDateString()} at 11:59pm`,
+  //     availableFrom: now.toISOString(),
+  //     dueDate: dueDate.toISOString()
+  //   };
     
-    try {
-      const assignment = await assignmentsClient.createAssignmentForCourse(courseId, newAssignment);
-      dispatch(addAssignment(assignment));
-      setAssignmentTitle("");
-    } catch (error) {
-      console.error("Error creating assignment:", error);
-    }
-  };
+  //   try {
+  //     const assignment = await assignmentsClient.createAssignmentForCourse(courseId, newAssignment);
+  //     dispatch(addAssignment(assignment));
+  //     setAssignmentTitle("");
+  //   } catch (error) {
+  //     console.error("Error creating assignment:", error);
+  //   }
+  // };
 
   // Delete assignment
   const removeAssignment = async (assignmentId: string) => {
