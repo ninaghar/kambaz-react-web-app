@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import AssignmentControls from "./AssignmentControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import AssignmentItemControls from "./AssignmentItemControls";
-import { setAssignments, addAssignment, deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import * as assignmentsClient from "./client";
 import "../../styles.css";
 
@@ -17,7 +17,7 @@ export default function Assignments() {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [assignmentTitle, setAssignmentTitle] = useState("");
+  // const [assignmentTitle, setAssignmentTitle] = useState("");
 
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   console.log("Assignments from Redux:", assignments); 

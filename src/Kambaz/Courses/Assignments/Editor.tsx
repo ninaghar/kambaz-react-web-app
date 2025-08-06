@@ -1,7 +1,7 @@
 import { Form, Button, Row, Col, } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import "react-datetime/css/react-datetime.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
 import * as assignmentsClient from "./client";
