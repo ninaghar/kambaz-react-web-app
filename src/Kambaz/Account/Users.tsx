@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa";
 export default function Users() {
  const [users, setUsers] = useState<any[]>([]);
  const [role, setRole] = useState("");
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [name, setName] = useState("");
  const createUser = async () => {
     try {

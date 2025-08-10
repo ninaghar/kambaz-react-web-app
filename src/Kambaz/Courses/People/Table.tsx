@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import PeopleDetails from "./Details";
 import { Link } from "react-router";
-import * as client from "../../Account/client";
+// import * as client from "../../Account/client";
 
 // import { useParams } from "react-router-dom";
 // import * as db from "../../Database";
