@@ -1,6 +1,6 @@
 // import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { enrollUser, unenrollUser, setEnrollments } from "../Enrollments/reducer";
 import { Card, Col, FormControl, Row } from "react-bootstrap";
 // import * as enrollmentClient from "../Enrollments/client";

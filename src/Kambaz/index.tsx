@@ -93,7 +93,7 @@ export default function Kambaz() {
 
   // Delete course - as specified in assignment  
   const deleteCourse = async (courseId: string) => {
-     await courseClient.deleteCourse(courseId);
+    await courseClient.deleteCourse(courseId);
     // await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
