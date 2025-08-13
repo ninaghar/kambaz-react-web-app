@@ -62,13 +62,14 @@ export default function Assignments() {
       };
       
       console.log("Creating assignment:", newAssignment);
-      const assignment = await assignmentsClient.createAssignment(courseId, newAssignment);
+      // const assignment = await assignmentsClient.createAssignment(courseId, newAssignment);
       
       // Add to Redux store
-      dispatch(setAssignments([...assignments, assignment]));
+      // dispatch(setAssignments([...assignments, assignment]));
       
       // Navigate to editor for the new assignment
-      navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignment._id}/Editor`);
+      navigate(`/Kambaz/Courses/${courseId}/Assignments/new/Editor`);
+      // navigate(`/Kambaz/Courses/${courseId}/Assignments/${assignment._id}/Editor`);
     } catch (error) {
       console.error("Error creating assignment:", error);
     }
@@ -165,7 +166,7 @@ export default function Assignments() {
                       </div>
                       <div>
                         <a
-                          href={`#/Kambaz/Courses/${courseId}/Assignments/${assignment.course}/Editor`}
+                          href={`#/Kambaz/Courses/${courseId}/Assignments/${assignment._id}/Editor`}
                           className="wd-assignment-link text-decoration-none text-dark fw-bold"
                         >
                           {assignment.title}

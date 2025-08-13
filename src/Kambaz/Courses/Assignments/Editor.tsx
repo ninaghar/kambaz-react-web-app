@@ -8,14 +8,14 @@ import { addAssignment, updateAssignment } from "./reducer";
 import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
-  const { courseId, assignmentId } = useParams();
+  const { courseId, aid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  console.log("Params:", { courseId, assignmentId });
+  console.log("Params:", { courseId, aid });
 
   // Determine if we're editing or creating
-  const isEditing = assignmentId && assignmentId !== "new"; 
+  const isEditing = aid && aid !== "new"; 
   console.log("isEditing:", isEditing);
 
   // Assignment state - matching your database structure
@@ -38,10 +38,10 @@ export default function AssignmentEditor() {
 
   // Fetch assignment from server if editing
   const fetchAssignment = async () => {
-    if (!assignmentId || assignmentId === "new") return;
+    if (!aid || aid === "new") return;
     try {
-      console.log("Fetching assignment:", assignmentId);
-      const assignmentData = await assignmentsClient.findAssignmentById(assignmentId);
+      console.log("Fetching assignment:", aid);
+      const assignmentData = await assignmentsClient.findAssignmentById(aid);
       console.log("Fetched assignment data:", assignmentData);
       
       setAssignment({
@@ -67,7 +67,7 @@ export default function AssignmentEditor() {
 
   useEffect(() => {
     fetchAssignment();
-  }, [assignmentId]);
+  }, [aid]);
 
   // Helper function to format date for input fields (ISO to YYYY-MM-DD)
   const formatDateForInput = (isoDate: string) => {
@@ -93,10 +93,10 @@ export default function AssignmentEditor() {
   if (!courseId) return;
 
   try {
-    if (isEditing && assignmentId) {
+    if (isEditing && aid) {
       // Update existing assignment
       console.log("Updating assignment:", assignment);
-      const updatedAssignment = await assignmentsClient.updateAssignment(assignmentId, assignment);
+      const updatedAssignment = await assignmentsClient.updateAssignment(aid, assignment);
       dispatch(updateAssignment(updatedAssignment));
       console.log("Updated assignment:", assignment.title);
     } else {
@@ -105,9 +105,9 @@ export default function AssignmentEditor() {
 
       // Create a copy without _id if it's empty
       const { _id, ...assignmentData } = assignment;
-      const cleanedAssignment = _id ? assignment : assignmentData;
+      // const cleanedAssignment = _id ? assignment : assignmentData;
 
-      const newAssignment = await assignmentsClient.createAssignment(courseId, cleanedAssignment);
+      const newAssignment = await assignmentsClient.createAssignment(courseId, assignmentData);
       dispatch(addAssignment(newAssignment));
       console.log("Created new assignment:", assignment.title);
     }
@@ -118,34 +118,7 @@ export default function AssignmentEditor() {
   }
 };
 
-  // const saveAssignment = async () => {
-  //   if (!assignment.title.trim()) {
-  //     alert("Assignment title is required");
-  //     return;
-  //   }
 
-  //   if (!courseId) return;
-    
-  //   try {
-  //     if (isEditing && assignmentId) {
-  //       // Update existing assignment - use the correct client function
-  //       console.log("Updating assignment:", assignment);
-  //       const updatedAssignment = await assignmentsClient.updateAssignment( assignmentId,assignment);
-  //       dispatch(updateAssignment(updatedAssignment));
-  //       console.log("Updated assignment:", assignment.title);
-  //     } else {
-  //       // Create new assignment - use the correct client function
-  //       console.log("Creating assignment:", assignment);
-  //       const newAssignment = await assignmentsClient.createAssignment(courseId, assignment);
-  //       dispatch(addAssignment(newAssignment));
-  //       console.log("Created new assignment:", assignment.title);
-  //     }
-  //     navigate(`/Kambaz/Courses/${courseId}/Assignments`);
-  //   } catch (error) {
-  //     console.error("Error saving assignment:", error);
-  //     alert("Error saving assignment. Please try again.");
-  //   }
-  // };
 
   const handleCancel = () => {
     console.log("Cancelled assignment editing");
@@ -329,6 +302,34 @@ export default function AssignmentEditor() {
   );
 }
 
+  // const saveAssignment = async () => {
+  //   if (!assignment.title.trim()) {
+  //     alert("Assignment title is required");
+  //     return;
+  //   }
+
+  //   if (!courseId) return;
+    
+  //   try {
+  //     if (isEditing && assignmentId) {
+  //       // Update existing assignment - use the correct client function
+  //       console.log("Updating assignment:", assignment);
+  //       const updatedAssignment = await assignmentsClient.updateAssignment( assignmentId,assignment);
+  //       dispatch(updateAssignment(updatedAssignment));
+  //       console.log("Updated assignment:", assignment.title);
+  //     } else {
+  //       // Create new assignment - use the correct client function
+  //       console.log("Creating assignment:", assignment);
+  //       const newAssignment = await assignmentsClient.createAssignment(courseId, assignment);
+  //       dispatch(addAssignment(newAssignment));
+  //       console.log("Created new assignment:", assignment.title);
+  //     }
+  //     navigate(`/Kambaz/Courses/${courseId}/Assignments`);
+  //   } catch (error) {
+  //     console.error("Error saving assignment:", error);
+  //     alert("Error saving assignment. Please try again.");
+  //   }
+  // };
 
 
 // import { Form, Button, Row, Col, } from "react-bootstrap";
