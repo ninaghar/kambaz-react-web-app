@@ -12,6 +12,7 @@ import * as courseClient from "./Courses/client";
 import ProtectedRoute from './Account/ProtectedRoute';
 import ProtectedCourseRoute from './Courses/ProtectedCourseRoute';
 import { useEffect, useState } from 'react';
+
 import { useSelector } from 'react-redux';
 
 export default function Kambaz() {
@@ -22,6 +23,35 @@ export default function Kambaz() {
   // State for all courses (when showing all courses)
   const [allCourses, setAllCourses] = useState<any[]>([]);
 
+   const [enrolling, setEnrolling] = useState<boolean>(false);
+ const findCoursesForUser = async () => {
+   try {
+     const courses = await userClient.findCoursesForUser(currentUser._id);
+     setCourses(courses);
+   } catch (error) {
+     console.error(error);
+   }
+ };
+ const fetchCourses = async () => {
+   try {
+     const allCourses = await courseClient.fetchAllCourses();
+     const enrolledCourses = await userClient.findCoursesForUser(
+       currentUser._id
+     );
+     const courses = allCourses.map((course: any) => {
+       if (enrolledCourses.find((c: any) => c._id === course._id)) {
+         return { ...course, enrolled: true };
+       } else {
+         return course;
+       }
+     });
+     setCourses(courses);
+   } catch (error) {
+     console.error(error);
+   }
+ };
+
+
   // Fetch user's enrolled courses from server
   // const fetchCourses = async () => {
   //   try {
@@ -31,37 +61,40 @@ export default function Kambaz() {
   //     console.error(error);
   //   }
   // };
-  const fetchCourses = async () => {
-  try {
-    // First verify we have a valid session
-    await userClient.profile(); // This will throw if not authenticated
-    const courses = await userClient.findMyCourses();
-    setCourses(courses);
-  } catch (error) {
-    console.log("User not authenticated, can't fetch courses");
-    setCourses([]); // Clear courses if not authenticated
-  }
-};
+//   const fetchCourses = async () => {
+//   try {
+//     // First verify we have a valid session
+//     // await userClient.profile(); // This will throw if not authenticated
+//     // const courses = await userClient.findMyCourses();
+//     const courses = await courseClient.fetchAllCourses();
+//     setCourses(courses);
+//   } catch (error) {
+//     console.log("User not authenticated, can't fetch courses");
+//     setCourses([]); // Clear courses if not authenticated
+//   }
+// };
 
   // Fetch all courses from server
-  const fetchAllCourses = async () => {
-    try {
-      const courses = await courseClient.fetchAllCourses();
-      setAllCourses(courses);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const fetchAllCourses = async () => {
+  //   try {
+  //     const courses = await courseClient.fetchAllCourses();
+  //     setAllCourses(courses);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // Create new course - as specified in assignment
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
+    // const newCourse = await userClient.createCourse(course);
+    const newCourse = await courseClient.createCourse(course);
     setCourses([...courses, newCourse]);
   };
 
   // Delete course - as specified in assignment  
   const deleteCourse = async (courseId: string) => {
-    await courseClient.deleteCourse(courseId);
+    const status = await courseClient.deleteCourse(courseId);
+    // await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
 
@@ -83,14 +116,34 @@ export default function Kambaz() {
   //   }
   // }, [currentUser]);
   useEffect(() => {
-  if (currentUser) {
-    console.log("Current user exists, fetching courses...");
+  // if (currentUser) {
+    if (enrolling) {
+    // console.log("Current user exists, fetching courses...");
     fetchCourses();
   } else {
-    console.log("No current user, clearing courses");
-    setCourses([]);
+    findCoursesForUser();
+    // console.log("No current user, clearing courses");
+    // setCourses([]);
   }
-}, [currentUser]);
+}, [currentUser, enrolling]);
+
+const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+   if (enrolled) {
+     await userClient.enrollIntoCourse(currentUser._id, courseId);
+   } else {
+     await userClient.unenrollFromCourse(currentUser._id, courseId);
+   }
+   setCourses(
+     courses.map((course) => {
+       if (course._id === courseId) {
+         return { ...course, enrolled: enrolled };
+       } else {
+         return course;
+       }
+     })
+   );
+ };
+
 
   return (
     <Session>
@@ -104,14 +157,17 @@ export default function Kambaz() {
               <ProtectedRoute>
                 <Dashboard 
                   courses={courses}
-                  allCourses={allCourses}
+                  // allCourses={allCourses}
                   course={course}
                   setCourse={setCourse}
                   addNewCourse={addNewCourse}
                   deleteCourse={deleteCourse}
                   updateCourse={updateCourse}
-                  fetchAllCourses={fetchAllCourses}
-                  fetchCourses={fetchCourses}
+                  // fetchAllCourses={fetchAllCourses}
+                  // fetchCourses={fetchCourses}
+                  enrolling={enrolling} 
+                  setEnrolling={setEnrolling}
+                  updateEnrollment={updateEnrollment}
                 />
               </ProtectedRoute>
             } />

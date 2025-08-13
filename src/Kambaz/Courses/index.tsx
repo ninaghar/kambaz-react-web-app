@@ -2,7 +2,8 @@ import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import Home from "./Home";
 import Assignments from "./Assignments";
-import PeopleTable from "./People/Table";
+// import PeopleTable from "./People/Table";
+import People from "./People";
 
 // import PeopleTable from "./Assignments";
 // import { courses } from "../Database";
@@ -52,7 +53,7 @@ export default function Courses(
               <Route path="Assignments/:aid/Editor" element={<AssignmentEditor />} />
               <Route path="Quizzes" element={<h2>Quizzes </h2>} />
               <Route path="Grades" element={<h2>Grades </h2>} />
-              <Route path="People" element={<PeopleTable />} />
+              <Route path="People" element={<People />} />
             </Routes>
              </div> </div>
           {/* </td>

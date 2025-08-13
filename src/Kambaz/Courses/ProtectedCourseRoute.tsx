@@ -46,7 +46,7 @@ export default function ProtectedCourseRoute({ children }: { children: any }) {
     console.log(" User Role:", currentUser.role);
     
     // Check each enrollment
-    enrollments.forEach((enrollment: { _id: any; user: any; course: string | undefined; }, index: any) => {
+    (Array.isArray(enrollments) ? enrollments : []).forEach((enrollment: { _id: any; user: any; course: string | undefined; }, index: any) => {
       console.log(`Enrollment ${index}:`, {
         enrollmentId: enrollment._id,
         userId: enrollment.user,
@@ -77,8 +77,9 @@ export default function ProtectedCourseRoute({ children }: { children: any }) {
     return children;
   }
 
+  const safeEnrollments = Array.isArray(enrollments) ? enrollments : [];
   // Check if user is enrolled in this course
-  const isEnrolled = enrollments.some(
+  const isEnrolled = safeEnrollments.some(
     (enrollment: any) => {
       const userMatch = enrollment.user === currentUser._id;
       const courseMatch = enrollment.course === courseId;

@@ -17,6 +17,26 @@ export default function Modules() {
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
 
+const addModuleHandler = async () => {
+   const newModule = await coursesClient.createModuleForCourse(courseId!, {
+     name: moduleName,
+     course: courseId,
+   });
+   dispatch(addModule(newModule));
+   setModuleName("");
+ };
+
+
+
+  const fetchModulesForCourse = async () => {
+    const modules = await coursesClient.findModulesForCourse(courseId!);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModulesForCourse();
+  }, [courseId]);
+
+
   // Fetch modules for the current course
   const fetchModules = async () => {
     try {
@@ -69,10 +89,23 @@ export default function Modules() {
     }
   };
 
+  const deleteModuleHandler = async (moduleId: string) => {
+   await modulesClient.deleteModule(moduleId);
+   dispatch(deleteModule(moduleId));
+ };
+
+
   // Handle module editing
   const handleEditModule = (moduleId: string) => {
     dispatch(editModule(moduleId));
   };
+
+  const updateModuleHandler = async (module: any) => {
+    await modulesClient.updateModule(module);
+    dispatch(updateModule(module));
+  };
+
+
 
   // Handle local module updates (for typing in the input field)
   const handleModuleUpdate = (module: any) => {
@@ -82,7 +115,8 @@ export default function Modules() {
   // Handle Enter key press to save module
   const handleKeyDown = async (e: any, module: any) => {
     if (e.key === "Enter") {
-      await saveModule({ ...module, editing: false });
+      updateModuleHandler({ ...module, editing: false });
+      // await saveModule({ ...module, editing: false });
     }
   };
 
@@ -94,7 +128,7 @@ export default function Modules() {
       <ModulesControls 
         moduleName={moduleName} 
         setModuleName={setModuleName}
-        addModule={createModuleForCourse}
+        addModule={addModuleHandler}
       />
       <br />
       <br />
@@ -115,7 +149,7 @@ export default function Modules() {
               {module.editing && (
                 <FormControl 
                   className="w-50 d-inline-block"
-                  onChange={(e) => handleModuleUpdate({ ...module, name: e.target.value })}
+                  onChange={(e) => updateModuleHandler({ ...module, name: e.target.value })}
                   onKeyDown={(e) => handleKeyDown(e, module)}
                   defaultValue={module.name}
                 />
@@ -123,7 +157,7 @@ export default function Modules() {
               
               <ModuleControlButtons 
                 moduleId={module._id}
-                deleteModule={(moduleId) => removeModule(moduleId)}
+                deleteModule={(moduleId) => deleteModuleHandler(moduleId)}
                 editModule={(moduleId) => handleEditModule(moduleId)}
               />
             </div>
