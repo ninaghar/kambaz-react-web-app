@@ -7,14 +7,25 @@ export default function Session({ children }: { children: any }) {
   const dispatch = useDispatch();
   const fetchProfile = async () => {
     try {
-      const currentUser = await client.profile();
-      dispatch(setCurrentUser(currentUser));
+        const currentUser = await client.profile();
+        dispatch(setCurrentUser(currentUser));
     } catch (err: any) {
-      console.error(err);
-    //   dispatch(setCurrentUser(null));
+        console.error(err);
+        dispatch(setCurrentUser(null)); // Make sure it's explicitly null
     }
     setPending(false);
-  };
+    };
+
+//   const fetchProfile = async () => {
+//     try {
+//       const currentUser = await client.profile();
+//       dispatch(setCurrentUser(currentUser));
+//     } catch (err: any) {
+//       console.error(err);
+//     //   dispatch(setCurrentUser(null));
+//     }
+//     setPending(false);
+//   };
   useEffect(() => {
     fetchProfile();
   }, []);

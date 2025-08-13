@@ -110,22 +110,25 @@ export default function Kambaz() {
     }));
   };
 
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     fetchCourses();
-  //   }
-  // }, [currentUser]);
-  useEffect(() => {
-  // if (currentUser) {
-    if (enrolling) {
-    // console.log("Current user exists, fetching courses...");
+ useEffect(() => {
+  if (!currentUser) {
+    // User not signed in, skip fetching
+    return;
+  }
+
+  if (enrolling) {
     fetchCourses();
   } else {
     findCoursesForUser();
-    // console.log("No current user, clearing courses");
-    // setCourses([]);
   }
 }, [currentUser, enrolling]);
+//   useEffect(() => {
+//     if (enrolling) {
+//     fetchCourses();
+//   } else {
+//     findCoursesForUser();
+//   }
+// }, [currentUser, enrolling]);
 
 const updateEnrollment = async (courseId: string, enrolled: boolean) => {
    if (enrolled) {
