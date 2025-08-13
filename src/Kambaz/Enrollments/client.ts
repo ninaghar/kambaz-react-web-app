@@ -10,8 +10,14 @@ export const findAllEnrollments = async () => {
 };
 
 // Get enrollments for current user
-export const findMyEnrollments = async () => {
-  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/current/enrollments`);
+//   app.get("/api/users/:userId/enrollments", (req, res) => {
+//     const { userId } = req.params;
+//     const enrollments = enrollmentsDao.findEnrollmentsForUser(userId);
+//     res.json(enrollments);
+//   });
+
+export const findMyEnrollments = async (userId: string) => {
+  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/$userId/enrollments`);
   return response.data;
 };
 
