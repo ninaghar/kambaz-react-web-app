@@ -17,7 +17,7 @@ export const findAllEnrollments = async () => {
 //   });
 
 export const findMyEnrollments = async (userId: string) => {
-  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/$userId/enrollments`);
+  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/${userId}/enrollments`);
   return response.data;
 };
 
