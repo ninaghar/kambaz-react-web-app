@@ -53,41 +53,41 @@ const addModuleHandler = async () => {
   }, [courseId]);
 
   // Create a new module for the course
-  const createModuleForCourse = async () => {
-    if (!courseId || !moduleName.trim()) return;
+  // const createModuleForCourse = async () => {
+  //   if (!courseId || !moduleName.trim()) return;
     
-    try {
-      const newModule = { name: moduleName, course: courseId };
-      const module = await coursesClient.createModuleForCourse(courseId, newModule);
-      dispatch(addModule(module));
-      setModuleName(""); // Clear the input
-    } catch (error) {
-      console.error("Failed to create module:", error);
-      alert("Failed to create module. Please try again.");
-    }
-  };
+  //   try {
+  //     const newModule = { name: moduleName, course: courseId };
+  //     const module = await coursesClient.createModuleForCourse(courseId, newModule);
+  //     dispatch(addModule(module));
+  //     setModuleName(""); // Clear the input
+  //   } catch (error) {
+  //     console.error("Failed to create module:", error);
+  //     alert("Failed to create module. Please try again.");
+  //   }
+  // };
 
   // Save/update module on server and update Redux
-  const saveModule = async (module: any) => {
-    try {
-      await modulesClient.updateModule(module);
-      dispatch(updateModule(module));
-    } catch (error) {
-      console.error("Failed to save module:", error);
-      alert("Failed to save module. Please try again.");
-    }
-  };
+  // const saveModule = async (module: any) => {
+  //   try {
+  //     await modulesClient.updateModule(module);
+  //     dispatch(updateModule(module));
+  //   } catch (error) {
+  //     console.error("Failed to save module:", error);
+  //     alert("Failed to save module. Please try again.");
+  //   }
+  // };
 
   // Remove module from server and Redux
-  const removeModule = async (moduleId: string) => {
-    try {
-      await modulesClient.deleteModule(moduleId);
-      dispatch(deleteModule(moduleId));
-    } catch (error) {
-      console.error("Failed to delete module:", error);
-      alert("Failed to delete module. Please try again.");
-    }
-  };
+  // const removeModule = async (moduleId: string) => {
+  //   try {
+  //     await modulesClient.deleteModule(moduleId);
+  //     dispatch(deleteModule(moduleId));
+  //   } catch (error) {
+  //     console.error("Failed to delete module:", error);
+  //     alert("Failed to delete module. Please try again.");
+  //   }
+  // };
 
   const deleteModuleHandler = async (moduleId: string) => {
    await modulesClient.deleteModule(moduleId);
@@ -108,9 +108,9 @@ const addModuleHandler = async () => {
 
 
   // Handle local module updates (for typing in the input field)
-  const handleModuleUpdate = (module: any) => {
-    dispatch(updateModule(module));
-  };
+  // const handleModuleUpdate = (module: any) => {
+  //   dispatch(updateModule(module));
+  // };
 
   // Handle Enter key press to save module
   const handleKeyDown = async (e: any, module: any) => {

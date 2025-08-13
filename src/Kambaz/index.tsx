@@ -21,7 +21,7 @@ export default function Kambaz() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   // State for all courses (when showing all courses)
-  const [allCourses, setAllCourses] = useState<any[]>([]);
+  // const [allCourses, setAllCourses] = useState<any[]>([]);
 
    const [enrolling, setEnrolling] = useState<boolean>(false);
  const findCoursesForUser = async () => {
@@ -93,7 +93,7 @@ export default function Kambaz() {
 
   // Delete course - as specified in assignment  
   const deleteCourse = async (courseId: string) => {
-    const status = await courseClient.deleteCourse(courseId);
+    const _status = await courseClient.deleteCourse(courseId);
     // await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
   };

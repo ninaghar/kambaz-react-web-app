@@ -28,7 +28,7 @@ export default function Dashboard({
   setEnrolling,
   updateEnrollment
 }: DashboardProps) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   // Event handlers
